@@ -19,6 +19,7 @@
 
 <script src="./js/jquery.js"></script>
 <script src="./js/echarts-all.js"></script>
+<script src="./js/echartsTip.js"></script>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts图表
     var myChart = echarts.init(document.getElementById('chart'));
@@ -258,7 +259,7 @@
             subtext: 'Chrome下测试数据'
         },
         tooltip : {
-            trigger: 'item'
+            trigger: 'axis'
         },
         legend: {
             data:[
@@ -342,58 +343,10 @@
         ]
     };
 
-
     // 为echarts对象加载数据
     myChart.setOption(option);
-    var timer = 0;
 
-    var total = option.xAxis[0].data.length;
-    var count = 0;
-    var tooltip = myChart.component.tooltip;
-    function autoTip() {
-        timer = setInterval(function () {
-            var curr = count % total;
-
-            //3.0以上版本的showTip使用方式
-//            myChart.dispatchAction({type: 'showTip', seriesIndex: 0, dataIndex: curr});
-            tooltip.showTip({seriesIndex: '0', dataIndex: curr});
-            count += 1;
-        }, 1000);
-    }
-    autoTip();
-
-    //var config = echarts.config;
-    /**
-     * item触发类，使用myChart控制
-     * axis触发类，使用搭配控制
-     */
-    //分axis触发和item触发，hover只对item有效
-    myChart.on('hover', function(param) {
-        console.log('itemmove');
-        count = param.dataIndex + 1
-        if (timer) {
-            clearInterval(timer);
-            timer = 0;
-        }
-    });
-
-    var zRender = myChart.getZrender();
-    zRender.on('mousemove', function (param) {
-        console.log('zrmove');
-        if(param.event){
-            param.event.cancelBubble = true;
-        }
-        if (timer) {
-            clearInterval(timer);
-            timer = 0;
-        }
-    });
-    $(window.document).on('mousemove', function (param) {
-        console.log('winmove');
-        if (!timer) {
-            autoTip();
-        }
-    });
+    tools.autoShowToolTip(myChart, option, 2000);
 </script>
 </body>
 </html>
