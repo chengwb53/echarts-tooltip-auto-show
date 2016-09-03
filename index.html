@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .chart {
+            height: 500px;
+            width: 800px;
+        }
+    </style>
+</head>
+<body>
+<div id="chart" class="chart">
+
+</div>
+<span id="hover-console"></span>
+<span id="console"></span>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/echarts-all.js"></script>
+<script src="./js/echartsTip.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts图表
+    var myChart = echarts.init(document.getElementById('chart'));
+    console.log(myChart);
+    //    var option = {
+    //        tooltip: {
+    //            show: true
+    //        },
+    //        legend: {
+    //            data:['销量']
+    //        },
+    //        xAxis : [
+    //            {
+    //                type : 'category',
+    //                data : ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+    //            }
+    //        ],
+    //        yAxis : [
+    //            {
+    //                type : 'value'
+    //            }
+    //        ],
+    //        series : [
+    //            {
+    //                "name":"销量",
+    //                "type":"bar",
+    //                "data":[5, 20, 40, 10, 10, 20]
+    //            }
+    //        ]
+    //    };
+    //
+//    var option = {
+//        tooltip: {
+//            trigger: 'axis'
+//        },
+//        legend: {
+//            data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+//        },
+//        toolbox: {
+//            show: true,
+//            feature: {
+//                mark: {show: true},
+//                dataView: {show: true, readOnly: false},
+//                magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+//                restore: {show: true},
+//                saveAsImage: {show: true}
+//            }
+//        },
+//        calculable: false,
+//        xAxis: [
+//            {
+//                type: 'category',
+//                boundaryGap: false,
+//                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+//            }
+//        ],
+//        yAxis: [
+//            {
+//                type: 'value'
+//            }
+//        ],
+//        series: [
+//            {
+//                name: '邮件营销',
+//                type: 'line',
+//                stack: '总量',
+//                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+//                data: [120, 132, 101, 134, 90, 230, 210]
+//            },
+//            {
+//                name: '联盟广告',
+//                type: 'line',
+//                stack: '总量',
+//                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+//                data: [220, 182, 191, 234, 290, 330, 310]
+//            },
+//            {
+//                name: '视频广告',
+//                type: 'line',
+//                stack: '总量',
+//                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+//                data: [150, 232, 201, 154, 190, 330, 410]
+//            },
+//            {
+//                name: '直接访问',
+//                type: 'line',
+//                stack: '总量',
+//                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+//                data: [320, 332, 301, 334, 390, 330, 320]
+//            },
+//            {
+//                name: '搜索引擎',
+//                type: 'line',
+//                stack: '总量',
+//                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+//                data: [820, 932, 901, 934, 1290, 1330, 1320]
+//            }
+//        ]
+//    };
+
+//      var option = {
+//            title : {
+//                text : '类目坐标散点图',
+//                subtext : 'dataZoom支持'
+//            },
+//            tooltip : {
+//                trigger: 'axis',
+//                axisPointer:{
+//                    show: true,
+//                    type : 'cross',
+//                    lineStyle: {
+//                        type : 'dashed',
+//                        width : 1
+//                    }
+//                }
+//            },
+//            toolbox: {
+//                show : true,
+//                feature : {
+//                    mark : {show: true},
+//                    dataView : {show: true, readOnly: false},
+//                    restore : {show: true},
+//                    saveAsImage : {show: true}
+//                }
+//            },
+//            dataZoom: {
+//                show: true,
+//                start : 30,
+//                end : 70
+//            },
+//            legend : {
+//                data : ['series1', 'series2']
+//            },
+//            dataRange: {
+//                min: 0,
+//                max: 100,
+//                orient: 'horizontal',
+//                y: 30,
+//                x: 'center',
+//                //text:['高','低'],           // 文本，默认为数值文本
+//                color:['lightgreen','orange'],
+//                splitNumber: 5
+//            },
+//            xAxis : [
+//                {
+//                    type : 'category',
+//                    axisLabel: {
+//                        formatter : function(v) {
+//                            return '类目' + v
+//                        }
+//                    },
+//                    data : function (){
+//                        var list = [];
+//                        var len = 0;
+//                        while (len++ < 500) {
+//                            list.push(len);
+//                        }
+//                        return list;
+//                    }()
+//                }
+//            ],
+//            yAxis : [
+//                {
+//                    type : 'value'
+//                }
+//            ],
+//            animation: false,
+//            series : [
+//                {
+//                    name:'series1',
+//                    type:'scatter',
+//                    tooltip : {
+//                        trigger: 'item',
+//                        formatter : function (params) {
+//                            return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
+//                                    + params.value[1] + ', '
+//                                    + params.value[2];
+//                        },
+//                        axisPointer:{
+//                            show: true
+//                        }
+//                    },
+//                    symbolSize: function (value){
+//                        return Math.round(value[2]/10);
+//                    },
+//                    data: (function () {
+//                        var d = [];
+//                        var len = 0;
+//                        var value;
+//                        while (len++ < 500) {
+//                            d.push([
+//                                len,
+//                                (Math.random()*30).toFixed(2) - 0,
+//                                (Math.random()*100).toFixed(2) - 0
+//                            ]);
+//                        }
+//                        return d;
+//                    })()
+//                },
+//                {
+//                    name:'series2',
+//                    type:'scatter',
+//                    tooltip : {
+//                        trigger: 'item',
+//                        formatter : function (params) {
+//                            return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
+//                                    + params.value[1] + ', '
+//                                    + params.value[2];
+//                        },
+//                        axisPointer:{
+//                            show: true
+//                        }
+//                    },
+//                    symbolSize: function (value){
+//                        return Math.round(value[2]/10);
+//                    },
+//                    data: (function () {
+//                        var d = [];
+//                        var len = 0;
+//                        var value;
+//                        while (len++ < 500) {
+//                            d.push([
+//                                len,
+//                                (Math.random()*30).toFixed(2) - 0,
+//                                (Math.random()*100).toFixed(2) - 0
+//                            ]);
+//                        }
+//                        return d;
+//                    })()
+//                }
+//            ]
+//        };
+
+    var option = {
+        title : {
+            text: 'ECharts2 vs ECharts1',
+            subtext: 'Chrome下测试数据'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:[
+                'ECharts1 - 2k数据','ECharts1 - 2w数据','ECharts1 - 20w数据','',
+                'ECharts2 - 2k数据','ECharts2 - 2w数据','ECharts2 - 20w数据'
+            ]
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : false,
+        grid: {y: 70, y2:30, x2:20},
+        xAxis : [
+            {
+                type : 'category',
+                data : ['Line','Bar','Scatter','K','Map']
+            },
+            {
+                type : 'category',
+                axisLine: {show:false},
+                axisTick: {show:false},
+                axisLabel: {show:false},
+                splitArea: {show:false},
+                splitLine: {show:false},
+                data : ['Line','Bar','Scatter','K','Map']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel:{formatter:'{value} ms'}
+            }
+        ],
+        series : [
+            {
+                name:'ECharts2 - 2k数据',
+                type:'bar',
+                itemStyle: {normal: {color:'rgba(193,35,43,1)', label:{show:true}}},
+                data:[40,155,95,75, 0]
+            },
+            {
+                name:'ECharts2 - 2w数据',
+                type:'bar',
+                itemStyle: {normal: {color:'rgba(181,195,52,1)', label:{show:true,textStyle:{color:'#27727B'}}}},
+                data:[100,200,105,100,156]
+            },
+            {
+                name:'ECharts2 - 20w数据',
+                type:'bar',
+                itemStyle: {normal: {color:'rgba(252,206,16,1)', label:{show:true,textStyle:{color:'#E87C25'}}}},
+                data:[906,911,908,778,0]
+            },
+            {
+                name:'ECharts1 - 2k数据',
+                type:'bar',
+                xAxisIndex:1,
+                itemStyle: {normal: {color:'rgba(193,35,43,0.5)', label:{show:true,formatter:function(p){return p.value > 0 ? (p.value +'\n'):'';}}}},
+                data:[96,224,164,124,0]
+            },
+            {
+                name:'ECharts1 - 2w数据',
+                type:'bar',
+                xAxisIndex:1,
+                itemStyle: {normal: {color:'rgba(181,195,52,0.5)', label:{show:true}}},
+                data:[491,2035,389,955,347]
+            },
+            {
+                name:'ECharts1 - 20w数据',
+                type:'bar',
+                xAxisIndex:1,
+                itemStyle: {normal: {color:'rgba(252,206,16,0.5)', label:{show:true,formatter:function(p){return p.value > 0 ? (p.value +'+'):'';}}}},
+                data:[3000,3000,2817,3000,0]
+            }
+        ]
+    };
+
+    // 为echarts对象加载数据
+    myChart.setOption(option);
+
+    tools.autoShowToolTip(myChart, option, 2000);
+</script>
+</body>
+</html>
