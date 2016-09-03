@@ -1,1 +1,2 @@
 # ehover
+echarts中tooltip自动轮播工具
