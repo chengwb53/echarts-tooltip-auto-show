@@ -67,7 +67,7 @@
 //                saveAsImage: {show: true}
 //            }
 //        },
-//        calculable: true,
+//        calculable: false,
 //        xAxis: [
 //            {
 //                type: 'category',
@@ -119,146 +119,146 @@
 //        ]
 //    };
 
-      var option = {
-            title : {
-                text : '类目坐标散点图',
-                subtext : 'dataZoom支持'
-            },
-            tooltip : {
-                trigger: 'axis',
-                axisPointer:{
-                    show: true,
-                    type : 'cross',
-                    lineStyle: {
-                        type : 'dashed',
-                        width : 1
-                    }
-                }
-            },
-            toolbox: {
-                show : true,
-                feature : {
-                    mark : {show: true},
-                    dataView : {show: true, readOnly: false},
-                    restore : {show: true},
-                    saveAsImage : {show: true}
-                }
-            },
-            dataZoom: {
-                show: true,
-                start : 30,
-                end : 70
-            },
-            legend : {
-                data : ['series1', 'series2']
-            },
-            dataRange: {
-                min: 0,
-                max: 100,
-                orient: 'horizontal',
-                y: 30,
-                x: 'center',
-                //text:['高','低'],           // 文本，默认为数值文本
-                color:['lightgreen','orange'],
-                splitNumber: 5
-            },
-            xAxis : [
-                {
-                    type : 'category',
-                    axisLabel: {
-                        formatter : function(v) {
-                            return '类目' + v
-                        }
-                    },
-                    data : function (){
-                        var list = [];
-                        var len = 0;
-                        while (len++ < 500) {
-                            list.push(len);
-                        }
-                        return list;
-                    }()
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value'
-                }
-            ],
-            animation: false,
-            series : [
-                {
-                    name:'series1',
-                    type:'scatter',
-                    tooltip : {
-                        trigger: 'item',
-                        formatter : function (params) {
-                            return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
-                                    + params.value[1] + ', '
-                                    + params.value[2];
-                        },
-                        axisPointer:{
-                            show: true
-                        }
-                    },
-                    symbolSize: function (value){
-                        return Math.round(value[2]/10);
-                    },
-                    data: (function () {
-                        var d = [];
-                        var len = 0;
-                        var value;
-                        while (len++ < 500) {
-                            d.push([
-                                len,
-                                (Math.random()*30).toFixed(2) - 0,
-                                (Math.random()*100).toFixed(2) - 0
-                            ]);
-                        }
-                        return d;
-                    })()
-                },
-                {
-                    name:'series2',
-                    type:'scatter',
-                    tooltip : {
-                        trigger: 'item',
-                        formatter : function (params) {
-                            return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
-                                    + params.value[1] + ', '
-                                    + params.value[2];
-                        },
-                        axisPointer:{
-                            show: true
-                        }
-                    },
-                    symbolSize: function (value){
-                        return Math.round(value[2]/10);
-                    },
-                    data: (function () {
-                        var d = [];
-                        var len = 0;
-                        var value;
-                        while (len++ < 500) {
-                            d.push([
-                                len,
-                                (Math.random()*30).toFixed(2) - 0,
-                                (Math.random()*100).toFixed(2) - 0
-                            ]);
-                        }
-                        return d;
-                    })()
-                }
-            ]
-        };
+//      var option = {
+//            title : {
+//                text : '类目坐标散点图',
+//                subtext : 'dataZoom支持'
+//            },
+//            tooltip : {
+//                trigger: 'axis',
+//                axisPointer:{
+//                    show: true,
+//                    type : 'cross',
+//                    lineStyle: {
+//                        type : 'dashed',
+//                        width : 1
+//                    }
+//                }
+//            },
+//            toolbox: {
+//                show : true,
+//                feature : {
+//                    mark : {show: true},
+//                    dataView : {show: true, readOnly: false},
+//                    restore : {show: true},
+//                    saveAsImage : {show: true}
+//                }
+//            },
+//            dataZoom: {
+//                show: true,
+//                start : 30,
+//                end : 70
+//            },
+//            legend : {
+//                data : ['series1', 'series2']
+//            },
+//            dataRange: {
+//                min: 0,
+//                max: 100,
+//                orient: 'horizontal',
+//                y: 30,
+//                x: 'center',
+//                //text:['高','低'],           // 文本，默认为数值文本
+//                color:['lightgreen','orange'],
+//                splitNumber: 5
+//            },
+//            xAxis : [
+//                {
+//                    type : 'category',
+//                    axisLabel: {
+//                        formatter : function(v) {
+//                            return '类目' + v
+//                        }
+//                    },
+//                    data : function (){
+//                        var list = [];
+//                        var len = 0;
+//                        while (len++ < 500) {
+//                            list.push(len);
+//                        }
+//                        return list;
+//                    }()
+//                }
+//            ],
+//            yAxis : [
+//                {
+//                    type : 'value'
+//                }
+//            ],
+//            animation: false,
+//            series : [
+//                {
+//                    name:'series1',
+//                    type:'scatter',
+//                    tooltip : {
+//                        trigger: 'item',
+//                        formatter : function (params) {
+//                            return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
+//                                    + params.value[1] + ', '
+//                                    + params.value[2];
+//                        },
+//                        axisPointer:{
+//                            show: true
+//                        }
+//                    },
+//                    symbolSize: function (value){
+//                        return Math.round(value[2]/10);
+//                    },
+//                    data: (function () {
+//                        var d = [];
+//                        var len = 0;
+//                        var value;
+//                        while (len++ < 500) {
+//                            d.push([
+//                                len,
+//                                (Math.random()*30).toFixed(2) - 0,
+//                                (Math.random()*100).toFixed(2) - 0
+//                            ]);
+//                        }
+//                        return d;
+//                    })()
+//                },
+//                {
+//                    name:'series2',
+//                    type:'scatter',
+//                    tooltip : {
+//                        trigger: 'item',
+//                        formatter : function (params) {
+//                            return params.seriesName + ' （'  + '类目' + params.value[0] + '）<br/>'
+//                                    + params.value[1] + ', '
+//                                    + params.value[2];
+//                        },
+//                        axisPointer:{
+//                            show: true
+//                        }
+//                    },
+//                    symbolSize: function (value){
+//                        return Math.round(value[2]/10);
+//                    },
+//                    data: (function () {
+//                        var d = [];
+//                        var len = 0;
+//                        var value;
+//                        while (len++ < 500) {
+//                            d.push([
+//                                len,
+//                                (Math.random()*30).toFixed(2) - 0,
+//                                (Math.random()*100).toFixed(2) - 0
+//                            ]);
+//                        }
+//                        return d;
+//                    })()
+//                }
+//            ]
+//        };
 
-    option = {
+    var option = {
         title : {
             text: 'ECharts2 vs ECharts1',
             subtext: 'Chrome下测试数据'
         },
         tooltip : {
-            trigger: 'axis'
+            trigger: 'item'
         },
         legend: {
             data:[
@@ -276,7 +276,7 @@
                 saveAsImage : {show: true}
             }
         },
-        calculable : true,
+        calculable : false,
         grid: {y: 70, y2:30, x2:20},
         xAxis : [
             {
@@ -345,112 +345,55 @@
 
     // 为echarts对象加载数据
     myChart.setOption(option);
-
-    var ecConfig = echarts.config;
-
-    //可以获取有效的数据元素，数据元素属性包含坐标点和长宽（如果页面有变化需要重新获取）
-    var counts = option.xAxis[0].data.length;
     var timer = 0;
-    function startHover() {
-        if(timer) {
-            clearInterval(timer);
-        }
-        setTimeout(function () {
-            autoHover();
-            timer = setInterval(autoHover, 1000 * counts);
+
+    var total = option.xAxis[0].data.length;
+    var count = 0;
+    var tooltip = myChart.component.tooltip;
+    function autoTip() {
+        timer = setInterval(function () {
+            var curr = count % total;
+
+            //3.0以上版本的showTip使用方式
+//            myChart.dispatchAction({type: 'showTip', seriesIndex: 0, dataIndex: curr});
+            tooltip.showTip({seriesIndex: '0', dataIndex: curr});
+            count += 1;
         }, 1000);
     }
-    //startHover();
+    autoTip();
 
-    function autoHover() {
-        //图形如果有变化，需要重新获取
-        var zRender = myChart.getZrender();
-        var elements = zRender.storage._elements;
-        var times = 0;
-        console.log(elements);
-        var i = 0;
-
-        function classifyElements() {
-            var axisPoints = [];
-            var xAxis = option.xAxis;//横坐标轴可能有两个，暂时处理一个
-            var yAxis = option.yAxis;
-            var targetAxis;
-
-            //应该根据series中type来判断，然后在看坐标系
-            //根据图表类型来分类,暂时只考虑直角坐标(散点图需要另外处理series中的type='scatter')
-            if (!xAxis || !yAxis) {
-                return;
-            }
-
-            if (!xAxis[0].type || xAxis[0].type !== 'value') {
-                targetAxis = xAxis[0];
-            } else if (!yAxis[0].type || yAxis[0].type !== 'value') {
-                targetAxis = yAxis[0];
-            } else {
-                return;
-            }
-
-            switch (targetAxis.type) {
-                case 'category':
-                    for (var i = 0; i < targetAxis.data.length; i++) {
-                        var name = targetAxis.data[i];
-
-                        for (var key in elements) {
-                            var element = elements[key];
-
-                            if (element._echartsData && element._echartsData._name === name) {
-                                axisPoints[i] = element.style;
-                                //待把位置处理到目标坐标轴的坐标点，需要知道目标坐标系是y还是x
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case 'time':
-
-                    break;
-                default:
-                    break;
-            }
-
-            return axisPoints;
+    //var config = echarts.config;
+    /**
+     * item触发类，使用myChart控制
+     * axis触发类，使用搭配控制
+     */
+    //分axis触发和item触发，hover只对item有效
+    myChart.on('hover', function(param) {
+        console.log('itemmove');
+        count = param.dataIndex + 1
+        if (timer) {
+            clearInterval(timer);
+            timer = 0;
         }
+    });
 
-        //根据series中的一系列name值对elements进行归类排序，然后在进行hover
-        var axisPoints = classifyElements();
-        for (i = 0; i < axisPoints.length; i++) {
-            var axisPoint = axisPoints[i];
-
-            console.log(axisPoint);
-            (function (axisPoint, times) {
-                setTimeout(function () {
-                    zRender.trigger('mousemove', {
-                        zrenderX: Math.ceil(axisPoint.x + axisPoint.width / 2),
-                        zrenderY: Math.ceil(axisPoint.y + axisPoint.height / 2)
-                    });
-                }, 1000 * times);
-            })(axisPoint, times);
-
-            times++;
-            times %= counts;
+    var zRender = myChart.getZrender();
+    zRender.on('mousemove', function (param) {
+        console.log('zrmove');
+        if(param.event){
+            param.event.cancelBubble = true;
         }
-    }
-
-    myChart.on(ecConfig.EVENT.MOUSEOUT, function(param) {
-//        console.log('mouseout');
-//        if(param.event.target) {
-//            startHover();
-//        }
+        if (timer) {
+            clearInterval(timer);
+            timer = 0;
+        }
     });
-    myChart.on(ecConfig.EVENT.HOVER, function(param) {
-//        console.log('mousemove')
-//        if(param.event.target){
-//            clearInterval(timer);
-//        }
+    $(window.document).on('mousemove', function (param) {
+        console.log('winmove');
+        if (!timer) {
+            autoTip();
+        }
     });
-    $('#chart').on('hover', '*', function() {
-        console.log('dfdf');
-    })
 </script>
 </body>
 </html>
