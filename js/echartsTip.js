@@ -5,17 +5,15 @@
     global.tools = global.tools || {};
 
     /**
-     * 自动轮播echarts的tooltip
+     * 自动轮播echarts的tooltip（类型支持line、bar、scatter、k、radar、map、pie、chord）
      * @param chart echarts对象
-     * @param option echarts数据，setOption的参数
      * @param timeInterval 轮播时间间隔，单位毫秒
      */
-    tools.autoShowToolTip = function(chart, option, timeInterval) {
+    tools.autoShowToolTip = function(chart, timeInterval) {
         var timer = 0;
         var counts = 0;
         var tooltip = chart.component.tooltip;
         var seriesIndex = 0;
-        var dataCounts = option.series[seriesIndex].data.length;
 
         //var config = echarts.config;
         //分axis触发和item触发，hover只对item有效
@@ -48,27 +46,48 @@
             }
         });
 
+        //待完善监听canvas上滚动条变化，重置counts=0
+
         /**
          * 目前不管是item触发还是axis触发都是遍历所有数据点
          * 可以优化，区分item还是axis，如果是axis，只需要循环遍历series[0]的series的data
+         *
+         * tooltip.showTip()的参数只针对当前canvas上可见的数据有效
          */
         function showTip() {
+            //每次都获取数据个数，获取canvas上可见的数据个数
+            var dataCounts = tooltip.series[seriesIndex].data.length;
             var dataIndex = counts % dataCounts;
+            var chartType = tooltip.series[seriesIndex].type;
 
             //3.0以上版本的showTip使用方式
             //chart.dispatchAction({type: 'showTip', seriesIndex: seriesIndex, dataIndex: dataIndex});
-            tooltip.showTip({seriesIndex: seriesIndex, dataIndex: dataIndex});
+
+            /**
+             * 参数格式：{ seriesIndex: 0, seriesName:'', dataIndex:0 } // line、bar、scatter、k、radar，其中dataIndex必须，seriesIndex、seriesName指定一个即可
+             * 参数格式：{ seriesIndex: 0, seriesName:'', name:'' } // map、pie、chord，其中name必须，seriesIndex、seriesName指定一个即可
+             */
+            var params = {seriesIndex: seriesIndex};
+            switch(chartType) {
+                case 'map':
+                case 'pie':
+                case 'chord':
+                    params.name = tooltip.series[seriesIndex].data[dataIndex].name;
+                    break;
+                default:
+                    params.dataIndex = dataIndex;
+                    break;
+            }
+            tooltip.showTip(params);
 
             counts += 1;
             if(counts === dataCounts) {
                 counts = 0;
                 seriesIndex += 1;
 
-                if(!option.series[seriesIndex]) {
+                if(!tooltip.series[seriesIndex]) {
                     seriesIndex = 0;
                 }
-
-                dataCounts = option.series[seriesIndex].data.length;
             }
         }
 
