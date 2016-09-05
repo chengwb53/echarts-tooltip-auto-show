@@ -30,18 +30,33 @@
         zRender.on('mousemove', function (param) {
             if(param.event){
                 //阻止canvas上的鼠标移动事件冒泡
-                param.event.cancelBubble = true;
-            }
+                //param.event.cancelBubble = true;
 
-            if (timer) {
-                clearInterval(timer);
-                timer = 0;
+                //判断鼠标是否在canvas上
+                var $dom = $(chart.dom);
+                var chartPosition = $dom.offset();
+                var domWidth = $dom.width() - 5;
+                var domHeight = $dom.height() - 5;
+
+                if(event.x >= chartPosition.left && event.x <= chartPosition.left + domWidth &&
+                    event.y >= chartPosition.top && event.y <= chartPosition.top + domHeight){
+                    if (timer) {
+                        clearInterval(timer);
+                        timer = 0;
+                    }
+                }
             }
         });
 
+        //监听这两个事件才能较好的触发自动
         $(window.document).on('mousemove', function (param) {
             if (!timer) {
                 //如果鼠标在非canvas上移动，则表示已经离开canvas，继续tip轮播
+                autoShowTip();
+            }
+        });
+        zRender.on('globalout', function () {
+            if (!timer) {
                 autoShowTip();
             }
         });
@@ -56,9 +71,10 @@
          */
         function showTip() {
             //每次都获取数据个数，获取canvas上可见的数据个数
-            var dataCounts = tooltip.series[seriesIndex].data.length;
+            var series = chart.getSeries();
+            var dataCounts = series[seriesIndex].data.length;
             var dataIndex = counts % dataCounts;
-            var chartType = tooltip.series[seriesIndex].type;
+            var chartType = series[seriesIndex].type;
 
             //3.0以上版本的showTip使用方式
             //chart.dispatchAction({type: 'showTip', seriesIndex: seriesIndex, dataIndex: dataIndex});
@@ -72,7 +88,7 @@
                 case 'map':
                 case 'pie':
                 case 'chord':
-                    params.name = tooltip.series[seriesIndex].data[dataIndex].name;
+                    params.name = series[seriesIndex].data[dataIndex].name;
                     break;
                 default:
                     params.dataIndex = dataIndex;
@@ -85,7 +101,7 @@
                 counts = 0;
                 seriesIndex += 1;
 
-                if(!tooltip.series[seriesIndex]) {
+                if(!series[seriesIndex]) {
                     seriesIndex = 0;
                 }
             }
