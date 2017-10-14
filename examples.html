@@ -17,9 +17,8 @@
 <span id="hover-console"></span>
 <span id="console"></span>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/echarts-all.js"></script>
-<script src="./js/echartsTip.js"></script>
+<script src="src/echarts-3.7.2/dist/echarts.min.js"></script>
+<script src="src/echarts-tooltip-carousel.js"></script>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts图表
     var myChart = echarts.init(document.getElementById('chart'));
@@ -346,7 +345,7 @@
     // 为echarts对象加载数据
     myChart.setOption(option);
 
-    tools.autoShowToolTip(myChart, option, 2000);
+    tools.loopShowTooltip(myChart, option);
 </script>
 </body>
 </html>
