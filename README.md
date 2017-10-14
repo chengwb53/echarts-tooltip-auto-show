@@ -6,9 +6,8 @@ function loopShowTooltip (chart, chartOption, options);
 |参数|说明|
 ----------
 | chart        |    ECharts实例                       |
--------------------------------------------------------
+|--------------|-------------------------------------|
 | chartOption  |    ECharts配置信息                   |
--------------------------------------------------------
 |options|    {
               interval    轮播时间间隔，单位毫秒，默认为2000
          	 loopSeries  boolean类型，默认为false。
