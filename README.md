@@ -3,10 +3,10 @@ echarts中tooltip自动轮播工具
 
 ## api
 function loopShowTooltip (chart, chartOption, options);
-|参数|说明|
-----------
-| chart        |    ECharts实例                       |
+
+| 参数         |说明                                  |
 |--------------|-------------------------------------|
+| chart        |    ECharts实例                       |
 | chartOption  |    ECharts配置信息                   |
 |options|    {
               interval    轮播时间间隔，单位毫秒，默认为2000
