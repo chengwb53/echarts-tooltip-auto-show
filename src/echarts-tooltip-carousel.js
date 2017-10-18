@@ -62,15 +62,15 @@
 
         function autoShowTip() {
             function showTip(){
-                var series = chartOption.series;
-                chartType = series[seriesIndex].type; // 系列类型
-                dataLen = series[seriesIndex].data.length; // 某个系列的数据个数
-
                 //判断是否更新数据
                 if(dataIndex === 0 && !first && typeof options.updateData === "function") {
                     options.updateData();
                     chart.setOption(chartOption);
                 }
+
+                var series = chartOption.series;
+                chartType = series[seriesIndex].type; // 系列类型
+                dataLen = series[seriesIndex].data.length; // 某个系列的数据个数
 
                 var tipParams = {seriesIndex: seriesIndex};
                 switch(chartType) {
