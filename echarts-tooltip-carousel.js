@@ -112,13 +112,6 @@
             var invalidData = 0;
 
             function showTip() {
-                // chart不在页面中时，销毁定时器
-                var dom = chart.getDom();
-                if ($(document).find(dom).length === 0) {
-                    clearLoop();
-                    return;
-                }
-
                 //判断是否更新数据
                 if (dataIndex === 0 && !first && typeof options.updateData === "function") {
                     options.updateData();
