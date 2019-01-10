@@ -29,7 +29,7 @@
         };
 
         if (!chart || !chartOption) {
-            return {};
+            return;
         }
 
         var dataIndex = 0; // 数据索引，初始化为-1，是为了判断是否是第一次执行
@@ -39,14 +39,20 @@
         var dataLen = 0; // 某个系列数据个数
         var chartType; // 系列类型
         var first = true;
+        var lastShowSeriesIndex = 0;
+        var lastShowDataIndex = 0;
+        if (seriesLen === 0) {
+            return;
+        }
 
+        //待处理列表
         //不循环series时seriesIndex指定显示tooltip的系列，不指定默认为0，指定多个则默认为第一个
         //循环series时seriesIndex指定循环的series，不指定则从0开始循环所有series，指定单个则相当于不循环，指定多个
         //要不要添加开始series索引和开始的data索引？
 
         if (options) {
             options.interval = options.interval || defaultOptions.interval;
-            options.loopSeries =  options.loopSeries || defaultOptions.loopSeries;
+            options.loopSeries = options.loopSeries || defaultOptions.loopSeries;
             options.seriesIndex = options.seriesIndex || defaultOptions.seriesIndex;
             options.updateData = options.updateData || defaultOptions.updateData;
         } else {
@@ -60,24 +66,81 @@
             seriesIndex = options.seriesIndex;
         }
 
+        /**
+         * 清除定时器
+         */
+        function clearLoop() {
+            if (timeTicket) {
+                clearInterval(timeTicket);
+                timeTicket = 0;
+            }
+            chart.off('mousemove', stopAutoShow);
+            zRender.off('mousemove', zRenderMouseMove);
+            zRender.off('globalout', zRenderGlobalOut);
+        }
+
+        /**
+         * 取消高亮
+         */
+        function cancelHighlight() {
+            /**
+             * 如果dataIndex为0表示上次系列完成显示，如果是循环系列，且系列索引为0则上次是seriesLen-1，否则为seriesIndex-1；
+             * 如果不是循环系列，则就是当前系列；
+             * 如果dataIndex>0则就是当前系列。
+             */
+            var tempSeriesIndex = dataIndex === 0 ?
+                (options.loopSeries ?
+                    (seriesIndex === 0 ? seriesLen - 1 : seriesIndex - 1)
+                    : seriesIndex)
+                : seriesIndex;
+            var tempType = chartOption.series[tempSeriesIndex].type;
+
+            if (tempType === 'pie' || tempType === 'radar') {
+                chart.dispatchAction({
+                    type: 'downplay',
+                    seriesIndex: lastShowSeriesIndex,
+                    dataIndex: lastShowDataIndex
+                });//wait 系列序号为0且循环系列，则要判断上次的系列类型是否是pie、radar
+            }
+        }
+
+        /**
+         * 自动轮播tooltip
+         */
         function autoShowTip() {
-            function showTip(){
+            var invalidSeries = 0;
+            var invalidData = 0;
+
+            function showTip() {
+                // chart不在页面中时，销毁定时器
+                var dom = chart.getDom();
+                if ($(document).find(dom).length === 0) {
+                    clearLoop();
+                    return;
+                }
+
                 //判断是否更新数据
-                if(dataIndex === 0 && !first && typeof options.updateData === "function") {
+                if (dataIndex === 0 && !first && typeof options.updateData === "function") {
                     options.updateData();
                     chart.setOption(chartOption);
                 }
 
                 var series = chartOption.series;
-                chartType = series[seriesIndex].type; // 系列类型
-                dataLen = series[seriesIndex].data.length; // 某个系列的数据个数
+                var currSeries = series[seriesIndex];
+                if (!series || series.length === 0 ||
+                    !currSeries || !currSeries.type || !currSeries.data ||
+                    !currSeries.data.length) {
+                    return;
+                }
+                chartType = currSeries.type; // 系列类型
+                dataLen = currSeries.data.length; // 某个系列的数据个数
 
                 var tipParams = {seriesIndex: seriesIndex};
-                switch(chartType) {
-                    case 'map':
+                switch (chartType) {
                     case 'pie':
+                    case 'map':
                     case 'chord':
-                        tipParams.name = series[seriesIndex].data[dataIndex].name;
+                        tipParams.name = currSeries.data[dataIndex].name;
                         break;
                     case 'radar': // 雷达图
                         tipParams.seriesIndex = seriesIndex;
@@ -88,13 +151,10 @@
                         break;
                 }
 
-                if(chartType === 'pie' || chartType === 'radar') {
-                    // 取消之前高亮的图形
-                    chart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: options.loopSeries ? (seriesIndex === 0 ? seriesLen - 1 : seriesIndex - 1) : seriesIndex,
-                        dataIndex: dataIndex === 0 ? dataLen - 1 : dataIndex - 1
-                    });
+                if (chartType === 'pie' || chartType === 'radar') {
+                    if (!first) {
+                        cancelHighlight();
+                    }
 
                     // 高亮当前图形
                     chart.dispatchAction({
@@ -108,9 +168,15 @@
                 tipParams.type = 'showTip';
                 chart.dispatchAction(tipParams);
 
+                lastShowSeriesIndex = seriesIndex;
+                lastShowDataIndex = dataIndex;
                 dataIndex = (dataIndex + 1) % dataLen;
-                if (options.loopSeries && dataIndex === 0 && !first) { // 数据索引归0表示当前系列数据已经循环完
+                if (options.loopSeries && dataIndex === 0) { // 数据索引归0表示当前系列数据已经循环完
+                    invalidData = 0;
                     seriesIndex = (seriesIndex + 1) % seriesLen;
+                    if (seriesIndex === options.seriesIndex) {
+                        invalidSeries = 0;
+                    }
                 }
 
                 first = false;
@@ -126,13 +192,8 @@
                 clearInterval(timeTicket);
                 timeTicket = 0;
 
-                if(chartType === 'pie' || chartType === 'radar') {
-                    // 取消高亮的图形
-                    chart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: options.loopSeries ? (seriesIndex === 0 ? seriesLen - 1 : seriesIndex - 1) : seriesIndex,
-                        dataIndex: dataIndex === 0 ? dataLen - 1 : dataIndex - 1
-                    });
+                if (chartType === 'pie' || chartType === 'radar') {
+                    cancelHighlight();
                 }
             }
         }
@@ -146,6 +207,7 @@
 
             stopAutoShow();
         }
+
         // 离开echarts图时恢复自动轮播
         function zRenderGlobalOut() {
             if (!timeTicket) {
@@ -161,16 +223,7 @@
         autoShowTip();
 
         return {
-            clearLoop: function() {
-                if (timeTicket) {
-                    clearInterval(timeTicket);
-                    timeTicket = 0;
-                }
-
-                chart.off('mousemove', stopAutoShow);
-                zRender.off('mousemove', zRenderMouseMove);
-                zRender.off('globalout', zRenderGlobalOut);
-            }
+            clearLoop: clearLoop
         };
     };
 })(window);
