@@ -12,7 +12,7 @@ options | {<br>interval:轮播时间间隔，单位毫秒，默认为2000 <br> l
 返回值：| {clearLoop: clearLoop}
 
 ## 例子
-[example](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/example.html)
+[example](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/examples.html)
 
 ## License
 [MIT](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/LICENSE)
