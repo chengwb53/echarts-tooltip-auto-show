@@ -24,6 +24,9 @@
   let index = 0;
   let body = document.getElementsByTagName('body')[0];
 
+  /**
+   * 创建图表
+   */
   function createExample(option, tooltipOption) {
     let div = document.createElement('div');
     let position = '';
@@ -52,6 +55,9 @@
     tools.loopShowTooltip(chart, option, tooltipOption);
   }
 
+  /**
+   * 散点图例子
+   */
   let dataBJ = [
     [1, 55, 9, 56, 0.46, 18, 6, "良"],
     [2, 25, 11, 21, 0.65, 34, 9, "优"],
@@ -330,6 +336,9 @@
     loopSeries: true
   });
 
+  /**
+   * 折线图例子
+   */
   let line = {
     title: {
       text: '堆叠区域图'
@@ -417,6 +426,9 @@
     loopSeries: true
   });
 
+  /**
+   * 柱状图例子
+   */
   let bar = {
     title: {
       text: '某地区蒸发量和降水量',
@@ -486,6 +498,69 @@
   };
   createExample(bar, {
     loopSeries: true
+  });
+
+  /**
+   * 数据更新例子
+   */
+  let data = [{
+    name: '2000',
+    value: 55
+  }, {
+    name: '2001',
+    value: 67
+  }, {
+    name: '2002',
+    value: 60
+  }, {
+    name: '2003',
+    value: 73
+  }, {
+    name: '2004',
+    value: 93
+  }];
+
+  let simpleBar = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    xAxis: {
+      type: 'category',
+      data: []
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      data: [],
+      type: 'bar'
+    }]
+  };
+  let currentPage = 0;
+  let counts = 2;
+  let total = data.length;
+  let totalPage = Math.ceil(total / counts);
+  function updateData() {
+    let xAxisData = [];
+    let seriesData = [];
+
+    let currentData = data.slice(currentPage * counts, (currentPage + 1) * counts);
+    currentData.forEach(function (item) {
+      xAxisData.push(item.name);
+      seriesData.push(item.value);
+    });
+
+    currentPage = ++currentPage % totalPage;
+
+    simpleBar.xAxis.data = xAxisData;
+    simpleBar.series[0].data = seriesData;
+  }
+
+  updateData();
+
+  createExample(simpleBar, {
+    loopSeries: true,
+    updateData: updateData
   });
 </script>
 </body>
