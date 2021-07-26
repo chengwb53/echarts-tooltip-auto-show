@@ -121,12 +121,21 @@
         let series = chartOption.series;
         let currSeries = series[seriesIndex];
         if (!series || series.length === 0 ||
-          !currSeries || !currSeries.type || !currSeries.data ||
-          !currSeries.data.length) {
+          !currSeries || !currSeries.type) {
           return;
         }
-        chartType = currSeries.type; // 系列类型
-        dataLen = currSeries.data.length; // 某个系列的数据个数
+
+        if (currSeries.data) {
+          dataLen = currSeries.data.length; // 某个系列的数据个数
+        }
+        
+        if (chartOption.dataset) {
+          dataLen = chartOption.dataset.source.length
+
+          if (chartOption.dataset.dimensions) {
+            dataLen--
+          }
+        }
 
         let tipParams = {seriesIndex: seriesIndex};
         switch (chartType) {
