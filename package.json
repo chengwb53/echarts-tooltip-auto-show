@@ -1,0 +1,37 @@
+{
+  "name": "echarts-tooltip-auto-show",
+  "version": "1.0.0",
+  "description": "Echarts Tooltip自动轮播工具",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "prepublish": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengwubin/echarts-tooltip-auto-show.git"
+  },
+  "keywords": [
+    "echarts",
+    "tooltip",
+    "auto show"
+  ],
+  "author": "chengwb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chengwubin/echarts-tooltip-auto-show/issues"
+  },
+  "homepage": "https://github.com/chengwubin/echarts-tooltip-auto-show#readme",
+  "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "babel-loader": "^8.2.5",
+    "terser-webpack-plugin": "^5.3.1",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

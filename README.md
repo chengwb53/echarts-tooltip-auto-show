@@ -118,10 +118,10 @@ options | {<br>interval:轮播时间间隔，单位毫秒，默认为2000 <br> l
 ```
 
 ### 效果展示
-![image](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/scatter.gif)
-![image](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/line.gif)
-![image](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/bar.gif)
-![image](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/update.gif)
+![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/scatter.gif)
+![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/line.gif)
+![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/bar.gif)
+![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/update.gif)
 
 
 ## License
