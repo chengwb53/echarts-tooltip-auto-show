@@ -1,7 +1,17 @@
 import type { EChartsType } from 'echarts/core';
 import type { EChartsOption } from 'echarts/types/dist/echarts';
 import type { Payload } from 'echarts/types/dist/shared';
-import type { IToolOptions, IToolResult } from './types';
+
+export interface IToolOptions {
+  interval: number;
+  loopSeries: boolean;
+  seriesIndex: number;
+  updateData?: (() => void) | null;
+}
+
+export interface IToolResult {
+  clearLoop: () => void;
+}
 
 /**
  * 循环显示tooltip工具
