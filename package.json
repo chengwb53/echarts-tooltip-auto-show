@@ -1,6 +1,6 @@
 {
   "name": "echarts-tooltip-auto-show",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Echarts Tooltip自动轮播工具",
   "type": "module",
   "exports": {
@@ -17,7 +17,8 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "lint": "eslint . --cache --fix"
+    "lint": "eslint . --cache --fix",
+    "publish": "pnpm publish --access=public"
   },
   "repository": {
     "type": "git",
