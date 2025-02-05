@@ -5,6 +5,7 @@ import typescript from 'rollup-plugin-typescript2';
 
 export default {
   input: 'src/index.ts',
+  external: ['echarts'], // 外部化 echarts，避免重复打包
   output: [
     {
     // 打包按需加载文件
