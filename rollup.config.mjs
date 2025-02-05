@@ -29,7 +29,7 @@ export default {
     // 打包 umd 文件
       format: 'umd',
       // 打包后文件名
-      name: '[name]',
+      name: 'EChartsTool',
       entryFileNames: '[name].umd.js',
       dir: './dist',
       // 在 UMD 构建模式下为这些外部化的依赖
@@ -42,7 +42,7 @@ export default {
       // 打包 umd 文件
       format: 'umd',
       // 打包后文件名
-      name: '[name]',
+      name: 'EChartsUtils',
       entryFileNames: '[name].umd.min.js',
       dir: './dist',
       // 在 UMD 构建模式下为这些外部化的依赖

@@ -116,6 +116,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
           tipParams.dataIndex = dataIndex;
           break;
         default:
+          tipParams.seriesIndex = seriesIndex;
           tipParams.dataIndex = dataIndex;
           break;
       }
@@ -139,7 +140,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       // 防止updateData时先处理tooltip后刷新数据导出tooltip显示不正确
       setTimeout(() => {
         chart.dispatchAction(tipParams);
-      }, 0);
+      }, 10);
 
       lastShowSeriesIndex = seriesIndex;
       lastShowDataIndex = dataIndex;
