@@ -12,10 +12,9 @@
     </style>
 </head>
 <body>
-<script src="../lib/echarts-3.7.2/dist/echarts.min.js"></script>
-<script src="../src/echarts-tooltip-carousel.js"></script>
-
-<script type="text/javascript">
+<script src="https://unpkg.com/echarts@5.6.0/dist/echarts.min.js"></script>
+<script src="../dist/index.js"></script>
+<script>
   let x = 3, y = 2;
   let cell = {
     y: window.innerHeight / 2,
@@ -52,7 +51,7 @@
     // 为echarts对象加载数据
     chart.setOption(option);
 
-    tools.loopShowTooltip(chart, option, tooltipOption);
+    window.EChartsTool.loopShowTooltip(chart, option, tooltipOption);
   }
 
   /**
