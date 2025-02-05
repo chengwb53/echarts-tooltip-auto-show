@@ -7,7 +7,7 @@ export interface IToolOptions {
   loopSeries: boolean;
   seriesIndex: number;
   updateData?: (() => void) | null;
-  bounce: ((data: any, seriesIndex: number, dataIndex: number) => void) | null;
+  bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) | null;
 }
 
 export interface IToolResult {
@@ -76,6 +76,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     options.loopSeries = options.loopSeries ?? defaultOptions.loopSeries;
     options.seriesIndex = options.seriesIndex ?? defaultOptions.seriesIndex;
     options.updateData = options.updateData ?? defaultOptions.updateData;
+    options.bounce = options.bounce ?? defaultOptions.bounce;
   } else {
     options = defaultOptions;
   }
@@ -235,6 +236,45 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     }
   }
 
+  function mouseHover(e: any) {
+    // 取消其它高亮
+    chart?.dispatchAction({
+      type: 'downplay',
+      seriesIndex: e.seriesIndex,
+    });
+    // 高亮当前图形
+    chart?.dispatchAction({
+      type: 'highlight',
+      seriesIndex: e.seriesIndex,
+      dataIndex: e.dataIndex,
+    });
+    chart?.dispatchAction({
+      type: 'showTip',
+      seriesIndex: e.seriesIndex,
+      dataIndex: e.dataIndex,
+    });
+    if (chartOption.series && Array.isArray(chartOption.series) && typeof e.seriesIndex !== 'undefined') {
+      const targetSeries = chartOption.series[e.seriesIndex];
+      if (targetSeries && Array.isArray(targetSeries.data)) {
+        const itemData = targetSeries.data[e.dataIndex];
+
+        // 需要在判断一下，ts无法检查
+        if (options.bounce && typeof options.bounce === 'function') {
+          options.bounce(itemData, e.seriesIndex, e.dataIndex);
+        }
+      }
+    }
+  }
+
+  function mouseOut(e: any) {
+    // 高亮当前图形
+    chart?.dispatchAction({
+      type: 'highlight',
+      seriesIndex: e.seriesIndex,
+      dataIndex: e.dataIndex,
+    });
+  }
+
   // 鼠标在echarts图上时停止轮播
   if (browser.versions.mobile || browser.versions.ios || browser.versions.android
     || browser.versions.iPhone || browser.versions.iPad) {
@@ -246,6 +286,11 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     chart.on('mousemove', stopAutoShow);
     zRender.on('mousemove', zRenderMouseMove);
     zRender.on('globalout', zRenderGlobalOut);
+
+    if (options.bounce && typeof options.bounce === 'function') {
+      chart.on('mouseover', mouseHover);
+      chart.on('mouseout', mouseOut);
+    }
   }
 
   autoShowTip();
@@ -269,6 +314,9 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       chart.off('mousemove', stopAutoShow);
       zRender.off('mousemove', zRenderMouseMove);
       zRender.off('globalout', zRenderGlobalOut);
+
+      chart.off('mouseover', mouseHover);
+      chart.off('mouseout', mouseOut);
     }
   }
 
