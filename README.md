@@ -1,15 +1,14 @@
 # echarts tooltip carousel
 echarts中tooltip自动轮播工具
-
 ## api
-function loopShowTooltip (chart, chartOption, options);
+loopShowTooltip: (chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions) => IEChartsToolReturn;
 
-参数| 说明
----|---
-chart | ECharts实例
-chartOption | ECharts配置信息
-options | {<br>interval:轮播时间间隔，单位毫秒，默认为2000 <br> loopSeries:  boolean类型，默认为false。true表示循环所有series的tooltip；false则显示指定seriesIndex的tooltip。 <br> seriesIndex: 默认为0，指定某个系列（option中的series索引）循环显示tooltip，当loopSeries为true时，从seriesIndex系列开始执行。 <br> updateData:  自定义更新数据的函数，默认为null；用于类似于分页的效果，比如总数据有20条，chart一次只显示5条，全部数据可以分4次显示。 <br> }
-返回值：| {clearLoop: clearLoop} 取消轮播
+参数 | 类型                  | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+chart | EChartsType | ECharts实例                                                                                                                                                                                                                                                                                                                                                                                                                                           
+chartOption | EChartsOption | ECharts配置信息                                                                                                                                                                                                                                                                                                                                                                                                                                         
+options | IEChartsToolOptions | {<br>interval: number类型， 轮播时间间隔，单位毫秒，默认为2000 <br> loopSeries:  boolean类型，默认为false。true表示循环所有series的tooltip；false则显示指定seriesIndex的tooltip。 <br> seriesIndex: number类型，默认为0，指定某个系列（option中的series索引）循环显示tooltip，当loopSeries为true时，从seriesIndex系列开始执行。 <br> updateData?:  (() => void) \| null, 自定义更新数据的函数，默认为null；用于类似于分页的效果，比如总数据有20条，chart一次只显示5条，全部数据可以分4次显示。 <br> bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) \| null, 每次tooltip显示后，自定义处理函数，参数分别是当前显示tooltip的项的数据、系列索引、数据索引。 <br>} 
+返回值：| IEChartsToolReturn  | 异常或者错误时返回undefined <br> 正常情况返回：{<br>clearLoop: function(){},<br>stop: function(){}, <br>run: function() {}<br>}                                                                                                                                                                                                                                                                                                                                     
 
 ## 安装使用
 支持npm安装：
@@ -19,6 +18,80 @@ npm install echarts echarts-tooltip-auto-show
 
 ```ts
 import { loopShowTooltip } from 'echarts-tooltip-auto-show';
+
+const chartOption = {
+  title: {
+    text: '某地区蒸发量和降水量',
+    subtext: '纯属虚构'
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  legend: {
+    data: ['蒸发量', '降水量']
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      dataView: {show: true, readOnly: false},
+      magicType: {show: true, type: ['line', 'bar']},
+      restore: {show: true},
+      saveAsImage: {show: true}
+    }
+  },
+  calculable: true,
+  xAxis: [
+    {
+      type: 'category',
+      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value'
+    }
+  ],
+  series: [
+    {
+      name: '蒸发量',
+      type: 'bar',
+      data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+      markPoint: {
+        data: [
+          {type: 'max', name: '最大值'},
+          {type: 'min', name: '最小值'}
+        ]
+      },
+      markLine: {
+        data: [
+          {type: 'average', name: '平均值'}
+        ]
+      }
+    },
+    {
+      name: '降水量',
+      type: 'bar',
+      data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+      markPoint: {
+        data: [
+          {name: '年最高', value: 182.2, xAxis: 7, yAxis: 183},
+          {name: '年最低', value: 2.3, xAxis: 11, yAxis: 3}
+        ]
+      },
+      markLine: {
+        data: [
+          {type: 'average', name: '平均值'}
+        ]
+      }
+    }
+  ]
+};
+
+// 基于准备好的dom，初始化echarts图表
+const chart = echarts.init(document.getElementById('id'));
+
+// 为echarts对象加载数据
+chart.setOption(option);
 
 // 开始轮播显示
 const echartsTool = loopShowTooltip(chart, chartOption, {
@@ -140,11 +213,10 @@ echartsTool.clearLoop();
 ```
 
 ### 效果展示
-![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/scatter.gif)
-![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/line.gif)
-![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/bar.gif)
-![image](https://github.com/chengwubin/echarts-tooltip-auto-show/blob/master/src/assets/image/update.gif)
-
+![scatter.gif](example%2Fimage%2Fscatter.gif)
+![line.gif](example%2Fimage%2Fline.gif)
+![bar.gif](example%2Fimage%2Fbar.gif)
+![update.gif](example%2Fimage%2Fupdate.gif)
 
 ## License
 [MIT](https://github.com/chengwubin/echarts-tooltip-cyclic-display/blob/master/LICENSE)

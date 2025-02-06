@@ -2,7 +2,7 @@ import type { EChartsType } from 'echarts/core';
 import type { EChartsOption } from 'echarts/types/dist/echarts';
 import type { Payload } from 'echarts/types/dist/shared';
 
-export interface IToolOptions {
+export interface IEChartsToolOptions {
   interval: number;
   loopSeries: boolean;
   seriesIndex: number;
@@ -10,11 +10,13 @@ export interface IToolOptions {
   bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) | null;
 }
 
-export interface IToolResult {
+export interface IEChartsToolResult {
   clearLoop: () => void;
   stop: () => void;
   run: () => void;
 }
+
+export type IEChartsToolReturn = IEChartsToolResult | undefined;
 
 const browser = {
   versions: (function versions() {
@@ -44,7 +46,7 @@ const browser = {
  * @param chartOption echarts配置项对象
  * @param options 配置项对象
  */
-export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, options: IToolOptions): IToolResult | undefined {
+export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions): IEChartsToolReturn {
   const defaultOptions = {
     interval: 2000,
     loopSeries: false,
