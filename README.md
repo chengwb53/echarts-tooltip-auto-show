@@ -1,5 +1,7 @@
-# echarts tooltip carousel
+# echarts tooltip auto show
+echarts tooltip auto show
 echarts中tooltip自动轮播工具
+
 ## api
 loopShowTooltip: (chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions) => IEChartsToolReturn;
 
