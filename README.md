@@ -8,7 +8,7 @@ loopShowTooltip: (chart: EChartsType, chartOption: EChartsOption, options: IECha
 chart | EChartsType | ECharts实例                                                                                                                                                                                                                                                                                                                                                                                                                                           
 chartOption | EChartsOption | ECharts配置信息                                                                                                                                                                                                                                                                                                                                                                                                                                         
 options | IEChartsToolOptions | {<br>interval: number类型， 轮播时间间隔，单位毫秒，默认为2000 <br> loopSeries:  boolean类型，默认为false。true表示循环所有series的tooltip；false则显示指定seriesIndex的tooltip。 <br> seriesIndex: number类型，默认为0，指定某个系列（option中的series索引）循环显示tooltip，当loopSeries为true时，从seriesIndex系列开始执行。 <br> updateData?:  (() => void) \| null, 自定义更新数据的函数，默认为null；用于类似于分页的效果，比如总数据有20条，chart一次只显示5条，全部数据可以分4次显示。 <br> bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) \| null, 每次tooltip轮播显示后的回调函数，可以处理自定义功能，参数分别是当前显示tooltip的项的数据、系列索引、数据索引。 <br>} 
-返回值：| IEChartsToolReturn  | 异常或者错误时返回undefined <br> 正常情况返回：{<br>clearLoop: function(){},<br>stop: function(){}, <br>run: function() {}<br>}                                                                                                                                                                                                                                                                                                                                     
+返回值：| IEChartsToolReturn  | 异常或者错误时返回undefined <br> 正常情况返回：{<br>clearLoop: function(){} 清除轮播,<br>pause: function(){} 暂停轮播, <br>resume: function() {} 恢复轮播（只能恢复暂停的轮播，清除轮播后不可恢复）<br>}                                                                                                                                                                                                                                                                                                                                     
 
 ## 安装使用
 支持npm安装：
@@ -100,9 +100,9 @@ const echartsTool = loopShowTooltip(chart, chartOption, {
 });
 
 // 暂停轮播
-echartsTool.stop();
+echartsTool.pause();
 // 继续轮播
-echartsTool.run();
+echartsTool.resume();
 // 清除轮播
 echartsTool.clearLoop();
 ```

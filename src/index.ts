@@ -12,8 +12,8 @@ export interface IEChartsToolOptions {
 
 export interface IEChartsToolResult {
   clearLoop: () => void;
-  stop: () => void;
-  run: () => void;
+  pause: () => void;
+  resume: () => void;
 }
 
 export type IEChartsToolReturn = IEChartsToolResult | undefined;
@@ -122,6 +122,11 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
    * 自动轮播tooltip
    */
   function autoShowTip() {
+    // 已经在轮播了，则不执行
+    if (timeTicket) {
+      return;
+    }
+
     function showTip() {
       // chart不在页面中时，销毁定时器
       const dom = chart.getDom();
@@ -324,7 +329,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
 
   return {
     clearLoop,
-    stop: stopAutoShow,
-    run: autoShowTip,
+    pause: stopAutoShow,
+    resume: autoShowTip,
   };
 }
