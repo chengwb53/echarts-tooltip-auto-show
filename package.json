@@ -1,6 +1,6 @@
 {
   "name": "echarts-tooltip-auto-show",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Echarts Tooltip自动轮播工具",
   "type": "module",
   "exports": {
