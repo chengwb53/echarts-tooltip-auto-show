@@ -14,15 +14,23 @@ options | {<br>interval:轮播时间间隔，单位毫秒，默认为2000 <br> l
 ## 安装使用
 支持npm安装：
 ```cmd
-npm install echarts-tooltip-auto-show
+npm install echarts echarts-tooltip-auto-show
 ```
 
 ```ts
 import { loopShowTooltip } from 'echarts-tooltip-auto-show';
 
-loopShowTooltip(chart, chartOption, {
+// 开始轮播显示
+const echartsTool = loopShowTooltip(chart, chartOption, {
   loopSeries: true
 });
+
+// 暂停轮播
+echartsTool.stop();
+// 继续轮播
+echartsTool.run();
+// 清除轮播
+echartsTool.clearLoop();
 ```
 
 ## 例子
