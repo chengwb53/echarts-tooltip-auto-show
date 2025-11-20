@@ -2,6 +2,8 @@
 echarts tooltip auto show
 echarts中tooltip自动轮播工具
 
+[![v2.0.9](https://badge.fury.io/js/your-package-name.svg)](https://www.npmjs.com/package/echarts-tooltip-auto-show)
+
 ## api
 loopShowTooltip: (chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions) => IEChartsToolReturn;
 
