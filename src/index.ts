@@ -1,6 +1,4 @@
-import type { EChartsType } from 'echarts/core';
-import type { EChartsOption } from 'echarts/types/dist/echarts';
-import type { Payload } from 'echarts/types/dist/shared';
+import type { EChartsType, EChartsOption, Payload } from 'echarts';
 
 export interface IEChartsToolOptions {
   interval: number;
