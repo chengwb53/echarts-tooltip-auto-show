@@ -562,6 +562,72 @@
     loopSeries: true,
     updateData: updateData
   });
+
+  /**
+   * 柱状图例子
+   */
+  let pie = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      top: '5%',
+      left: 'center'
+    },
+    series: [
+      {
+        name: 'Access From',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false, // 使用 title 组件显示中心文字，不再使用 label
+          position: 'center',
+          formatter(params) {
+            return `{name|${params.name}}\n{percent|${params.percent}%}`;
+          },
+          rich: {
+            name: {
+              color: '#D3E9FF',
+              fontSize: 14,
+              fontWeight: 'normal',
+            },
+            percent: {
+              fontFamily: 'D-DIN Exp',
+              color: '#00B7FB',
+              fontSize: 16,
+              fontWeight: 'normal',
+            },
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        emphasis: {
+          disabled: false,
+          scale: true,
+          label: {
+            show: true,
+          },
+        },
+        data: [
+          { value: 1048, name: 'Search Engine' },
+          { value: 735, name: 'Direct' },
+          { value: 580, name: 'Email' },
+          { value: 484, name: 'Union Ads' },
+          { value: 300, name: 'Video Ads' }
+        ]
+      }
+    ]
+  };
+  createExample(pie, {
+    loopSeries: true
+  });
 </script>
 </body>
 </html>

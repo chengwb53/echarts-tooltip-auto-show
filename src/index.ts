@@ -263,7 +263,6 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       if (targetSeries && Array.isArray(targetSeries.data)) {
         const itemData = targetSeries.data[e.dataIndex];
 
-        // 需要在判断一下，ts无法检查
         if (options.bounce && typeof options.bounce === 'function') {
           options.bounce(itemData, e.seriesIndex, e.dataIndex);
         }
@@ -307,6 +306,11 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     if (timeTicket) {
       clearInterval(timeTicket);
       timeTicket = 0;
+    }
+
+    // 取消高亮
+    if (chartType === 'pie' || chartType === 'radar' || chartType === 'map') {
+      cancelHighlight();
     }
 
     if (browser.versions.mobile || browser.versions.ios || browser.versions.android
