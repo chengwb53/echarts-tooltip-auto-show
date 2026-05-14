@@ -1,16 +1,31 @@
 {
   "name": "echarts-tooltip-auto-show",
-  "version": "2.0.12",
-  "description": "Echarts Tooltip自动轮播工具",
   "type": "module",
+  "version": "2.0.13",
+  "description": "Echarts Tooltip自动轮播工具",
+  "author": "chengwb",
+  "license": "MIT",
+  "homepage": "https://github.com/chengwb53/echarts-tooltip-auto-show#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengwb53/echarts-tooltip-auto-show.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chengwb53/echarts-tooltip-auto-show/issues"
+  },
+  "keywords": [
+    "echarts",
+    "tooltip",
+    "auto show"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.js"
+      "require": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.umd.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
@@ -19,23 +34,12 @@
   "scripts": {
     "build": "rollup -c",
     "lint": "eslint . --cache --fix",
-    "publish": "pnpm publish --access=public"
+    "publish": "pnpm publish --access=public",
+    "test": "pnpm build && node --test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/chengwb53/echarts-tooltip-auto-show.git"
+  "peerDependencies": {
+    "echarts": ">=5.0.0"
   },
-  "keywords": [
-    "echarts",
-    "tooltip",
-    "auto show"
-  ],
-  "author": "chengwb",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/chengwb53/echarts-tooltip-auto-show/issues"
-  },
-  "homepage": "https://github.com/chengwb53/echarts-tooltip-auto-show#readme",
   "devDependencies": {
     "@antfu/eslint-config": "^4.1.0",
     "@rollup/plugin-commonjs": "^28.0.2",
@@ -49,8 +53,5 @@
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.7.3"
-  },
-  "peerDependencies": {
-    "echarts": ">=5.0.0"
   }
 }

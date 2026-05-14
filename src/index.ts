@@ -1,9 +1,9 @@
-import type { EChartsType, EChartsOption, Payload } from 'echarts';
+import type { EChartsOption, EChartsType, Payload } from 'echarts';
 
 export interface IEChartsToolOptions {
-  interval: number;
-  loopSeries: boolean;
-  seriesIndex: number;
+  interval?: number;
+  loopSeries?: boolean;
+  seriesIndex?: number;
   updateData?: (() => void) | null;
   bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) | null;
 }
@@ -16,27 +16,20 @@ export interface IEChartsToolResult {
 
 export type IEChartsToolReturn = IEChartsToolResult | undefined;
 
-const browser = {
-  versions: (function versions() {
-    const u = navigator.userAgent;
-    // const app = navigator.appVersion;
+function isMobileBrowser() {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
 
-    // 移动终端浏览器版本信息
-    return {
-      // 是否为移动终端
-      mobile: Boolean(u.match(/AppleWebKit.*Mobile.*/)),
-      // ios终端
-      ios: Boolean(u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)),
-      // android终端或者uc浏览器
-      android: u.includes('Android') || u.includes('Linux'),
-      // 是否为iPhone或者QQHD浏览器
-      iPhone: u.includes('iPhone'),
-      // 是否iPad
-      iPad: u.includes('iPad'),
-    };
-  })(),
-  language: navigator.language.toLowerCase(),
-};
+  const userAgent = navigator.userAgent;
+
+  return Boolean(userAgent.match(/AppleWebKit.*Mobile.*/))
+    || Boolean(userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/))
+    || userAgent.includes('Android')
+    || userAgent.includes('Linux')
+    || userAgent.includes('iPhone')
+    || userAgent.includes('iPad');
+}
 
 /**
  * 循环显示tooltip工具
@@ -44,8 +37,8 @@ const browser = {
  * @param chartOption echarts配置项对象
  * @param options 配置项对象
  */
-export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions): IEChartsToolReturn {
-  const defaultOptions = {
+export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions = {}): IEChartsToolReturn {
+  const defaultOptions: Required<IEChartsToolOptions> = {
     interval: 2000,
     loopSeries: false,
     seriesIndex: 0,
@@ -53,16 +46,30 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     bounce: null,
   };
 
-  if (!chart || !chartOption || !chartOption.series) {
+  if (typeof window === 'undefined' || typeof document === 'undefined' || !chart || !chartOption || !chartOption.series) {
     return;
   }
+  const mergedOptions: Required<IEChartsToolOptions> = {
+    ...defaultOptions,
+    ...options,
+  };
+  function getSeriesList() {
+    return Array.isArray(chartOption.series) ? chartOption.series : [chartOption.series];
+  }
+
+  let seriesLen = getSeriesList().length; // 系列个数
+  if (seriesLen === 0) {
+    return;
+  }
+
   let dataIndex = 0; // 数据索引，初始化为-1，是为了判断是否是第一次执行
   let seriesIndex = 0; // 系列索引
   let timeTicket = 0;
-  const seriesLen = Array.isArray(chartOption.series) ? chartOption.series.length : 1; // 系列个数
   let dataLen = 0; // 某个系列数据个数
   let chartType = ''; // 系列类型
   let first = true;
+  let cleared = false;
+  const isMobile = isMobileBrowser();
   // let lastShowSeriesIndex = 0;
   // let lastShowDataIndex = 0;
 
@@ -71,21 +78,11 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
   // 循环series时seriesIndex指定循环的series，不指定则从0开始循环所有series，指定单个则相当于不循环，指定多个
   // 要不要添加开始series索引和开始的data索引？
 
-  if (options) {
-    options.interval = options.interval ?? defaultOptions.interval;
-    options.loopSeries = options.loopSeries ?? defaultOptions.loopSeries;
-    options.seriesIndex = options.seriesIndex ?? defaultOptions.seriesIndex;
-    options.updateData = options.updateData ?? defaultOptions.updateData;
-    options.bounce = options.bounce ?? defaultOptions.bounce;
-  } else {
-    options = defaultOptions;
-  }
-
   // 如果设置的seriesIndex无效，则默认为0
-  if (options.seriesIndex < 0 || options.seriesIndex >= seriesLen) {
+  if (mergedOptions.seriesIndex < 0 || mergedOptions.seriesIndex >= seriesLen) {
     seriesIndex = 0;
   } else {
-    seriesIndex = options.seriesIndex;
+    seriesIndex = mergedOptions.seriesIndex;
   }
 
   /**
@@ -98,12 +95,13 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
      * 如果dataIndex>0则就是当前系列。
      */
     const tempSeriesIndex = dataIndex === 0
-      ? (options.loopSeries
+      ? (mergedOptions.loopSeries
           ? (seriesIndex === 0 ? seriesLen - 1 : seriesIndex - 1)
           : seriesIndex)
       : seriesIndex;
-    if (chartOption.series) {
-      const tempType = Array.isArray(chartOption.series) ? chartOption.series[tempSeriesIndex].type : chartOption.series.type;
+    const tempSeries = getSeriesList()[tempSeriesIndex];
+    if (tempSeries) {
+      const tempType = tempSeries.type;
 
       if (tempType === 'pie' || tempType === 'radar' || tempType === 'map') {
         // wait 系列序号为0且循环系列，则要判断上次的系列类型是否是pie、radar
@@ -121,7 +119,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
    */
   function autoShowTip() {
     // 已经在轮播了，则不执行
-    if (timeTicket) {
+    if (timeTicket || cleared) {
       return;
     }
 
@@ -134,16 +132,27 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       }
 
       // 判断是否更新数据
-      if (dataIndex === 0 && !first && typeof options.updateData === 'function') {
-        options.updateData();
+      if (dataIndex === 0 && !first && typeof mergedOptions.updateData === 'function') {
+        mergedOptions.updateData();
         chart.setOption(chartOption);
       }
 
-      const series = Array.isArray(chartOption.series) ? chartOption.series : [chartOption.series];
+      const series = getSeriesList();
+      seriesLen = series.length;
+      if (seriesLen === 0) {
+        return;
+      }
+      if (seriesIndex >= seriesLen) {
+        seriesIndex = 0;
+      }
+
       const currSeries = series[seriesIndex];
-      if (!series || series.length === 0
+      if (series.length === 0
         || !currSeries || !currSeries.type || !currSeries.data
-        || !Array.isArray(currSeries.data)) {
+        || !Array.isArray(currSeries.data) || currSeries.data.length === 0) {
+        if (mergedOptions.loopSeries) {
+          seriesIndex = (seriesIndex + 1) % seriesLen;
+        }
         return;
       }
       chartType = currSeries.type; // 系列类型
@@ -183,8 +192,8 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
         });
       }
 
-      if (options.bounce && typeof options.bounce === 'function') {
-        options.bounce(currentItemData, seriesIndex, dataIndex);
+      if (mergedOptions.bounce && typeof mergedOptions.bounce === 'function') {
+        mergedOptions.bounce(currentItemData, seriesIndex, dataIndex);
       }
 
       // 防止updateData时先处理tooltip后刷新数据导出tooltip显示不正确
@@ -199,7 +208,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       // lastShowDataIndex = dataIndex;
       dataIndex = (dataIndex + 1) % dataLen;
       // 数据索引归0表示当前系列数据已经循环完
-      if (options.loopSeries && dataIndex === 0) {
+      if (mergedOptions.loopSeries && dataIndex === 0) {
         seriesIndex = (seriesIndex + 1) % seriesLen;
       }
 
@@ -209,7 +218,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     if (first) {
       showTip();
     }
-    timeTicket = window.setInterval(showTip, options.interval);
+    timeTicket = window.setInterval(showTip, mergedOptions.interval);
   }
 
   // 关闭轮播
@@ -259,13 +268,13 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       seriesIndex: e.seriesIndex,
       dataIndex: e.dataIndex,
     });
-    if (chartOption.series && Array.isArray(chartOption.series) && typeof e.seriesIndex !== 'undefined') {
-      const targetSeries = chartOption.series[e.seriesIndex];
+    if (chartOption.series && typeof e.seriesIndex !== 'undefined') {
+      const targetSeries = getSeriesList()[e.seriesIndex];
       if (targetSeries && Array.isArray(targetSeries.data)) {
         const itemData = targetSeries.data[e.dataIndex];
 
-        if (options.bounce && typeof options.bounce === 'function') {
-          options.bounce(itemData, e.seriesIndex, e.dataIndex);
+        if (mergedOptions.bounce && typeof mergedOptions.bounce === 'function') {
+          mergedOptions.bounce(itemData, e.seriesIndex, e.dataIndex);
         }
       }
     }
@@ -281,8 +290,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
   }
 
   // 鼠标在echarts图上时停止轮播
-  if (browser.versions.mobile || browser.versions.ios || browser.versions.android
-    || browser.versions.iPhone || browser.versions.iPad) {
+  if (isMobile) {
     chart.on('touchstart', stopAutoShow);
     zRender.on('touchstart', zRenderMouseMove);
     // zRender.on('touchcancel', zRenderGlobalOut);
@@ -292,7 +300,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
     zRender.on('mousemove', zRenderMouseMove);
     zRender.on('globalout', zRenderGlobalOut);
 
-    if (options.bounce && typeof options.bounce === 'function') {
+    if (mergedOptions.bounce && typeof mergedOptions.bounce === 'function') {
       chart.on('mouseover', mouseHover);
       chart.on('mouseout', mouseOut);
     }
@@ -304,6 +312,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
    * 清除定时器
    */
   function clearLoop() {
+    cleared = true;
     if (timeTicket) {
       clearInterval(timeTicket);
       timeTicket = 0;
@@ -314,8 +323,7 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
       cancelHighlight();
     }
 
-    if (browser.versions.mobile || browser.versions.ios || browser.versions.android
-      || browser.versions.iPhone || browser.versions.iPad) {
+    if (isMobile) {
       chart.off('touchstart', stopAutoShow);
       zRender.off('touchstart', zRenderMouseMove);
       zRender.off('touchend', zRenderGlobalOut);

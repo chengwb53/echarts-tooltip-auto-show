@@ -27,6 +27,13 @@ export default {
       plugins: [terser()],
     },
     {
+      // 打包 CommonJS 文件
+      format: 'cjs',
+      entryFileNames: '[name].cjs',
+      exports: 'named',
+      dir: './dist',
+    },
+    {
     // 打包 umd 文件
       format: 'umd',
       // 打包后文件名
@@ -43,7 +50,7 @@ export default {
       // 打包 umd 文件
       format: 'umd',
       // 打包后文件名
-      name: 'EChartsUtils',
+      name: 'EChartsTool',
       entryFileNames: '[name].umd.min.js',
       dir: './dist',
       // 在 UMD 构建模式下为这些外部化的依赖

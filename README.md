@@ -1,18 +1,19 @@
 # echarts tooltip auto show
 echarts tooltip auto show
+
 echarts中tooltip自动轮播工具
 
-[![v2.0.9](https://badge.fury.io/js/your-package-name.svg)](https://www.npmjs.com/package/echarts-tooltip-auto-show)
+[![npm version](https://badge.fury.io/js/echarts-tooltip-auto-show.svg)](https://www.npmjs.com/package/echarts-tooltip-auto-show)
 
 ## api
 loopShowTooltip: (chart: EChartsType, chartOption: EChartsOption, options: IEChartsToolOptions) => IEChartsToolReturn;
 
-参数 | 类型                  | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+参数 | 类型                  | 说明
 ---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-chart | EChartsType | ECharts实例                                                                                                                                                                                                                                                                                                                                                                                                                                           
-chartOption | EChartsOption | ECharts配置信息                                                                                                                                                                                                                                                                                                                                                                                                                                         
-options | IEChartsToolOptions | {<br>interval: number类型， 轮播时间间隔，单位毫秒，默认为2000 <br> loopSeries:  boolean类型，默认为false。true表示循环所有series的tooltip；false则显示指定seriesIndex的tooltip。 <br> seriesIndex: number类型，默认为0，指定某个系列（option中的series索引）循环显示tooltip，当loopSeries为true时，从seriesIndex系列开始执行。 <br> updateData?:  (() => void) \| null, 自定义更新数据的函数，默认为null；用于类似于分页的效果，比如总数据有20条，chart一次只显示5条，全部数据可以分4次显示。 <br> bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) \| null, 每次tooltip轮播显示后的回调函数，可以处理自定义功能，参数分别是当前显示tooltip的项的数据、系列索引、数据索引。 <br>} 
-返回值：| IEChartsToolReturn  | 异常或者错误时返回undefined <br> 正常情况返回：{<br>clearLoop: function(){} 清除轮播,<br>pause: function(){} 暂停轮播, <br>resume: function() {} 恢复轮播（只能恢复暂停的轮播，清除轮播后不可恢复）<br>}                                                                                                                                                                                                                                                                                                                                     
+chart | EChartsType | ECharts实例
+chartOption | EChartsOption | ECharts配置信息
+options | IEChartsToolOptions | {<br>interval: number类型， 轮播时间间隔，单位毫秒，默认为2000 <br> loopSeries:  boolean类型，默认为false。true表示循环所有series的tooltip；false则显示指定seriesIndex的tooltip。 <br> seriesIndex: number类型，默认为0，指定某个系列（option中的series索引）循环显示tooltip，当loopSeries为true时，从seriesIndex系列开始执行。 <br> updateData?:  (() => void) \| null, 自定义更新数据的函数，默认为null；用于类似于分页的效果，比如总数据有20条，chart一次只显示5条，全部数据可以分4次显示。 <br> bounce?: ((data: any, seriesIndex: number, dataIndex: number) => void) \| null, 每次tooltip轮播显示后的回调函数，可以处理自定义功能，参数分别是当前显示tooltip的项的数据、系列索引、数据索引。 <br>}
+返回值：| IEChartsToolReturn  | 异常或者错误时返回undefined <br> 正常情况返回：{<br>clearLoop: function(){} 清除轮播,<br>pause: function(){} 暂停轮播, <br>resume: function() {} 恢复轮播（只能恢复暂停的轮播，清除轮播后不可恢复）<br>}
 
 ## 安装使用
 支持npm安装：
@@ -38,10 +39,10 @@ const chartOption = {
   toolbox: {
     show: true,
     feature: {
-      dataView: {show: true, readOnly: false},
-      magicType: {show: true, type: ['line', 'bar']},
-      restore: {show: true},
-      saveAsImage: {show: true}
+      dataView: { show: true, readOnly: false },
+      magicType: { show: true, type: ['line', 'bar'] },
+      restore: { show: true },
+      saveAsImage: { show: true }
     }
   },
   calculable: true,
@@ -63,13 +64,13 @@ const chartOption = {
       data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
       markPoint: {
         data: [
-          {type: 'max', name: '最大值'},
-          {type: 'min', name: '最小值'}
+          { type: 'max', name: '最大值' },
+          { type: 'min', name: '最小值' }
         ]
       },
       markLine: {
         data: [
-          {type: 'average', name: '平均值'}
+          { type: 'average', name: '平均值' }
         ]
       }
     },
@@ -79,13 +80,13 @@ const chartOption = {
       data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
       markPoint: {
         data: [
-          {name: '年最高', value: 182.2, xAxis: 7, yAxis: 183},
-          {name: '年最低', value: 2.3, xAxis: 11, yAxis: 3}
+          { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },
+          { name: '年最低', value: 2.3, xAxis: 11, yAxis: 3 }
         ]
       },
       markLine: {
         data: [
-          {type: 'average', name: '平均值'}
+          { type: 'average', name: '平均值' }
         ]
       }
     }
@@ -96,7 +97,7 @@ const chartOption = {
 const chart = echarts.init(document.getElementById('id'));
 
 // 为echarts对象加载数据
-chart.setOption(option);
+chart.setOption(chartOption);
 
 // 开始轮播显示
 const echartsTool = loopShowTooltip(chart, chartOption, {
@@ -122,7 +123,7 @@ echartsTool.clearLoop();
 
   // 为echarts对象加载数据
   chart.setOption(chartOption);
-    
+
   // 调用本工具接口
   tools.loopShowTooltip(chart, chartOption, {
     loopSeries: true
@@ -164,7 +165,7 @@ echartsTool.clearLoop();
     name: '2010',
     value: 220
   }];
-  
+
   let currentPage = 0; // 当前页
   let counts = 2; // 每页条数
   let total = data.length; // 总数
@@ -185,31 +186,31 @@ echartsTool.clearLoop();
             type: 'bar'
           }]
     };
-  
+
   function updateData() {
     let xAxisData = [];
     let seriesData = [];
-  
+
     let currentData = data.slice(currentPage * counts, (currentPage + 1) * counts);
     currentData.forEach(function (item) {
       xAxisData.push(item.name);
       seriesData.push(item.value);
     });
-  
+
     currentPage = ++currentPage % totalPage;
-  
-    bar.xAxis.data = xAxisData;
-    bar.series[0].data = seriesData;
+
+    chartOption.xAxis.data = xAxisData;
+    chartOption.series[0].data = seriesData;
   }
- 
+
   updateData();
 
   // 基于准备好的dom，初始化echarts图表
   let chart = echarts.init(document.getElementById('id'));
- 
+
   // 为echarts对象加载数据
   chart.setOption(chartOption);
-    
+
   // 调用本工具接口
   tools.loopShowTooltip(chart, chartOption, {
     loopSeries: true,
