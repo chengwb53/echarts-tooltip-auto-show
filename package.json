@@ -34,8 +34,12 @@
   "scripts": {
     "build": "rollup -c",
     "lint": "eslint . --cache --fix",
-    "publish": "pnpm publish --access=public",
+    "release": "pnpm publish --access=public --registry=https://registry.npmjs.org/",
     "test": "pnpm build && node --test"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "peerDependencies": {
     "echarts": ">=5.0.0"
