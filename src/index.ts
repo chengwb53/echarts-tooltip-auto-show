@@ -183,15 +183,16 @@ export function loopShowTooltip(chart: EChartsType, chartOption: EChartsOption, 
         });
       }
 
+      if (options.bounce && typeof options.bounce === 'function') {
+        options.bounce(currentItemData, seriesIndex, dataIndex);
+      }
+
       // 防止updateData时先处理tooltip后刷新数据导出tooltip显示不正确
       setTimeout(() => {
         tipParams.type = 'hideTip';
         chart.dispatchAction(tipParams);
         tipParams.type = 'showTip';
         chart.dispatchAction(tipParams);
-        if (options.bounce && typeof options.bounce === 'function') {
-          options.bounce(currentItemData, seriesIndex, dataIndex);
-        }
       }, 0);
 
       // lastShowSeriesIndex = seriesIndex;
