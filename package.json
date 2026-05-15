@@ -2,7 +2,7 @@
   "name": "echarts-tooltip-auto-show",
   "type": "module",
   "version": "2.0.13",
-  "description": "Echarts Tooltip自动轮播工具",
+  "description": "echarts tooltip auto show. ECharts Tooltip自动轮播工具。",
   "author": "chengwb",
   "license": "MIT",
   "homepage": "https://github.com/chengwb53/echarts-tooltip-auto-show#readme",
@@ -34,7 +34,7 @@
   "scripts": {
     "build": "rollup -c",
     "lint": "eslint . --cache --fix",
-    "release": "pnpm publish --access=public --registry=https://registry.npmjs.org/",
+    "release": "npm publish --access=public --registry=https://registry.npmjs.org/",
     "test": "pnpm build && node --test"
   },
   "publishConfig": {
